@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 3 - Grading System</title>
+
+    <style>
+        body{
+            background-color:gray;
+            font-family:Arial;
+            text-align:center;
+            padding-top:40px;
+        }
+
+        h2{
+            color:cyan;
+        }
+
+        label{
+            color:yellow;
+            font-size:18px;
+        }
+
+        input{
+            padding:8px;
+            width:180px;
+            margin:10px;
+        }
+
+        button{
+            background-color:deeppink;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            font-size:16px;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background-color:hotpink;
+        }
+
+        #result{
+            color:white;
+            font-size:20px;
+            margin-top:20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h2>Student Grading System</h2>
+
+<label>Enter Marks (0 - 100)</label><br>
+
+<input type="number" id="marks"><br>
+
+<button onclick="findGrade()">Check Grade</button>
+
+<p id="result"></p>
+
+<script>
+
+function findGrade()
+{
+    let marks = document.getElementById("marks").value;
+
+    // Form Validation
+    if(marks=="")
+    {
+        alert("Please Enter Marks");
+        return;
+    }
+
+    marks = Number(marks);
+
+    if(marks < 0 || marks > 100)
+    {
+        document.getElementById("result").innerHTML =
+        "Please Enter Valid Marks";
+    }
+
+    else if(marks >= 90)
+    {
+        document.getElementById("result").innerHTML =
+        "Grade : A+";
+    }
+
+    else if(marks >= 80)
+    {
+        document.getElementById("result").innerHTML =
+        "Grade : A";
+    }
+
+    else if(marks >= 70)
+    {
+        document.getElementById("result").innerHTML =
+        "Grade : B";
+    }
+
+    else if(marks >= 60)
+    {
+        document.getElementById("result").innerHTML =
+        "Grade : C";
+    }
+
+    else if(marks >= 50)
+    {
+        document.getElementById("result").innerHTML =
+        "Grade : D";
+    }
+
+    else
+    {
+        document.getElementById("result").innerHTML =
+        "Grade : F";
+    }
+
+}
+
+</script>
+
+</body>
+</html>
