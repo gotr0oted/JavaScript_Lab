@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 4 - Palindrome Checker</title>
+
+    <style>
+        body{
+            background-color:gray;
+            font-family:Arial;
+            text-align:center;
+            padding-top:40px;
+        }
+
+        h2{
+            color:cyan;
+        }
+
+        label{
+            color:yellow;
+            font-size:18px;
+        }
+
+        input{
+            padding:8px;
+            width:200px;
+            margin:10px;
+        }
+
+        button{
+            background-color:deeppink;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            font-size:16px;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background-color:hotpink;
+        }
+
+        #result{
+            color:white;
+            font-size:20px;
+            margin-top:20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h2>Palindrome Checker</h2>
+
+<label>Enter a Word</label><br>
+
+<input type="text" id="word"><br>
+
+<button onclick="checkPalindrome()">Check</button>
+
+<p id="result"></p>
+
+<script>
+
+    // Closure
+    function counter()
+    {
+        let count = 0;
+
+        return function()
+        {
+            count++;
+            return count;
+        };
+    }
+
+    let totalChecks = counter();
+
+    // Regular Function
+    function checkPalindrome()
+    {
+        try
+        {
+            let word = document.getElementById("word").value;
+
+            if(word == "")
+            {
+                throw "Please Enter a Word";
+            }
+
+            // Anonymous Function
+            let reverseWord = function(text)
+            {
+                return text.split("").reverse().join("");
+            };
+
+            // Arrow Function
+            const lowerCase = text => text.toLowerCase();
+
+            let original = lowerCase(word);
+            let reverse = reverseWord(original);
+
+            if(original == reverse)
+            {
+                document.getElementById("result").innerHTML =
+                "It is a Palindrome <br>Checks : " + totalChecks();
+            }
+            else
+            {
+                document.getElementById("result").innerHTML =
+                "Not a Palindrome <br>Checks : " + totalChecks();
+            }
+
+        }
+        catch(error)
+        {
+            alert(error);
+        }
+    }
+
+</script>
+
+</body>
+</html>
