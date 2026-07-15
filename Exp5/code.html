@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 5 - Shopping Cart</title>
+
+    <style>
+        body{
+            background-color:gray;
+            font-family:Arial;
+            text-align:center;
+            padding-top:40px;
+        }
+
+        h2{
+            color:cyan;
+        }
+
+        label{
+            color:yellow;
+            font-size:18px;
+        }
+
+        input{
+            padding:8px;
+            width:180px;
+            margin:8px;
+        }
+
+        button{
+            background-color:deeppink;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            font-size:16px;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background-color:hotpink;
+        }
+
+        #result{
+            color:white;
+            font-size:18px;
+            margin-top:20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h2>Shopping Cart Calculator</h2>
+
+<label>Product 1 Price</label><br>
+<input type="number" id="p1"><br>
+
+<label>Product 2 Price</label><br>
+<input type="number" id="p2"><br>
+
+<label>Product 3 Price</label><br>
+<input type="number" id="p3"><br><br>
+
+<button onclick="calculateBill()">Calculate Total</button>
+
+<p id="result"></p>
+
+<script>
+
+function calculateBill()
+{
+    let cart = [
+        {name:"Product 1", price:Number(document.getElementById("p1").value)},
+        {name:"Product 2", price:Number(document.getElementById("p2").value)},
+        {name:"Product 3", price:Number(document.getElementById("p3").value)}
+    ];
+
+    console.log("Products in Cart");
+
+    cart.forEach(function(item)
+    {
+        console.log(item.name + " : ₹" + item.price);
+    });
+
+    let total = cart.reduce(function(sum, item)
+    {
+        return sum + item.price;
+    }, 0);
+
+    let discount = 0;
+
+    if(total >= 50000)
+    {
+        discount = 20;
+    }
+    else if(total >= 20000)
+    {
+        discount = 10;
+    }
+    else if(total >= 5000)
+    {
+        discount = 5;
+    }
+
+    let discountAmount = total * discount / 100;
+    let finalAmount = total - discountAmount;
+
+    document.getElementById("result").innerHTML =
+    "Total Amount : ₹" + total +
+    "<br>Discount : " + discount + "%" +
+    "<br>Discount Amount : ₹" + discountAmount +
+    "<br><b>Final Amount : ₹" + finalAmount + "</b>";
+}
+
+</script>
+
+</body>
+</html>
