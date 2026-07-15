@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experiment 1</title>
+
+    <!-- Internal JavaScript -->
+    <script>
+        function showWelcome() {
+            document.getElementById("msg").innerHTML =
+                "Welcome to JavaScript Lab";
+
+            console.log("Welcome Message Displayed");
+
+            console.error("This is a sample error message");
+
+            let student = [
+                {Name: "Parth", Age: 20},
+                {Name: "Rahul", Age: 21}
+            ];
+
+            console.table(student);
+
+            function first() {
+                second();
+            }
+
+            function second() {
+                console.trace();
+            }
+
+            first();
+
+            // User Environment Information
+            console.log("Browser : " + navigator.appName);
+            console.log("Platform : " + navigator.platform);
+            console.log("Language : " + navigator.language);
+
+            document.getElementById("browser").innerHTML =
+                "Browser : " + navigator.appName;
+
+            document.getElementById("platform").innerHTML =
+                "Platform : " + navigator.platform;
+
+            document.getElementById("language").innerHTML =
+                "Language : " + navigator.language;
+        }
+    </script>
+
+    <script src="script.js"></script>
+
+</head>
+
+<body onload="showWelcome()">
+
+    <h2 id="msg"></h2>
+
+    <p id="browser"></p>
+    <p id="platform"></p>
+    <p id="language"></p>
+
+    <!-- Inline JavaScript -->
+    <button onclick="showAlert()">
+        Click Here
+    </button>
+
+</body>
+</html>
