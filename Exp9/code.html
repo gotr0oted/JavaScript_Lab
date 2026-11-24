@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiment 9 | Theme Preferences</title>
+    <style>
+        :root { color-scheme:light; --bg:#f4f6fb; --card:#fff; --ink:#17233d; --muted:#68758e; --line:#e1e7f2; --accent:#6253d8; --success:#eaf8f1; }
+        :root[data-theme="dark"] { color-scheme:dark; --bg:#182033; --card:#202b42; --ink:#f4f6ff; --muted:#b0bad0; --line:#53617a; --accent:#a69aff; --success:#173c34; }
+        * { box-sizing:border-box; }
+        body { margin:0; min-height:100vh; padding:40px 18px; background:var(--bg); color:var(--ink); font:15px/1.5 Arial,sans-serif; transition:background .2s,color .2s; }
+        main { width:min(760px,100%); margin:auto; }
+        .eyebrow { color:var(--accent); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+        h1 { margin:6px 0 4px; font-size:clamp(26px,5vw,38px); }
+        .intro { margin:0 0 24px; color:var(--muted); }
+        .card { padding:24px; border:1px solid var(--line); border-radius:18px; background:var(--card); box-shadow:0 14px 36px #0a143522; }
+        .identity { padding:11px 14px; border-radius:10px; background:#efedff; color:#3e328f; font-weight:700; }
+        :root[data-theme="dark"] .identity { background:#f4f2ff; color:#30266e; }
+        .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:14px; }
+        .panel { padding:18px; border:1px solid var(--line); border-radius:12px; }
+        h2 { margin:0 0 12px; font-size:16px; }
+        label { display:block; margin:8px 0 5px; font-weight:700; }
+        input { width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:9px; background:var(--card); color:var(--ink); font:inherit; }
+        button { margin:10px 8px 0 0; border:0; border-radius:9px; padding:10px 13px; background:var(--accent); color:white; font:700 14px Arial,sans-serif; cursor:pointer; }
+        :root[data-theme="dark"] button { color:#201a48; }
+        .status { margin:14px 0 0; padding:12px; border-radius:10px; background:var(--success); color:#08704b; font-weight:700; }
+        .storage { color:var(--muted); font-size:13px; }
+        @media(max-width:560px) { body{padding:24px 12px}.card{padding:18px}.grid{grid-template-columns:1fr} }
+    </style>
+</head>
+<body>
+<main>
+    <div class="eyebrow">Experiment 09 · Web Storage</div>
+    <h1>Theme Preferences</h1>
+    <p class="intro">Save a theme with localStorage and a session greeting with sessionStorage.</p>
+    <section class="card">
+        <div class="identity" id="identity">JavaScript Lab · Experiment 9</div>
+        <div class="grid">
+            <section class="panel">
+                <h2>Program Output</h2>
+                <p><strong>Saved theme:</strong> <span id="themeValue">Dark</span></p>
+                <p><strong>Storage:</strong> localStorage</p>
+                <p><strong>Session greeting:</strong> <span id="greeting">Welcome back, Parth!</span></p>
+                <p class="status" id="saveStatus" role="status">Preferences saved in this browser.</p>
+            </section>
+            <section class="panel">
+                <h2>Change Preferences</h2>
+                <label for="nameInput">Name for this session</label>
+                <input id="nameInput" value="Parth" autocomplete="name">
+                <div><button type="button" data-theme-choice="light">Light theme</button><button type="button" data-theme-choice="dark">Dark theme</button></div>
+                <button type="button" id="saveGreeting">Save session greeting</button>
+                <p class="storage">Theme persists in localStorage. The greeting is kept only for this browser tab session.</p>
+            </section>
+        </div>
+    </section>
+</main>
+<script>
+    const root = document.documentElement;
+    const greetingKey = "jslab-session-greeting";
+    const storedTheme = localStorage.getItem("jslab-theme") || "dark";
+    root.dataset.theme = storedTheme;
+    document.getElementById("themeValue").textContent = storedTheme[0].toUpperCase() + storedTheme.slice(1);
+
+    const savedGreeting = sessionStorage.getItem(greetingKey) || "Welcome back, Parth!";
+    sessionStorage.setItem(greetingKey, savedGreeting);
+    document.getElementById("greeting").textContent = savedGreeting;
+
+    document.querySelectorAll("[data-theme-choice]").forEach((button) => {
+        button.addEventListener("click", () => {
+            const theme = button.dataset.themeChoice;
+            localStorage.setItem("jslab-theme", theme);
+            root.dataset.theme = theme;
+            document.getElementById("themeValue").textContent = theme[0].toUpperCase() + theme.slice(1);
+            document.getElementById("saveStatus").textContent = `${theme[0].toUpperCase() + theme.slice(1)} theme saved in localStorage.`;
+        });
+    });
+
+    document.getElementById("saveGreeting").addEventListener("click", () => {
+        const name = document.getElementById("nameInput").value.trim() || "Guest";
+        const greeting = `Welcome back, ${name}!`;
+        sessionStorage.setItem(greetingKey, greeting);
+        document.getElementById("greeting").textContent = greeting;
+        document.getElementById("saveStatus").textContent = "Session greeting saved for this tab.";
+    });
+</script>
+</body>
+</html>
