@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiment 12 | WeatherScope</title>
+    <style>
+        :root { color-scheme:dark; --bg:#111a36; --panel:#202b50; --panel2:#27345d; --ink:#f3f5ff; --muted:#9ba9d0; --line:#3c4a75; --blue:#3479ff; --cyan:#19c5db; --purple:#8e74ff; --red:#ff777f; }
+        :root[data-theme="light"] { color-scheme:light; --bg:#eef3fb; --panel:#fff; --panel2:#f5f7ff; --ink:#182443; --muted:#64718c; --line:#dbe3f1; --blue:#316df2; --cyan:#0d9eb2; --purple:#6c56df; --red:#c33b52; }
+        * { box-sizing:border-box; }
+        body { margin:0; min-height:100vh; padding:28px 18px; background:radial-gradient(circle at 80% 70%,#30206a 0,transparent 42%),var(--bg); color:var(--ink); font:14px/1.5 Arial,sans-serif; transition:background .2s,color .2s; }
+        main { width:min(980px,100%); margin:auto; }
+        .topbar { display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:14px; }
+        .brand { display:flex; align-items:center; gap:12px; }
+        .logo { display:grid; place-items:center; width:42px; height:42px; border-radius:13px; background:linear-gradient(135deg,#5aa6ff,#7a61ff); font-size:22px; }
+        h1 { margin:0; font-size:23px; }
+        .tag { color:var(--cyan); font-size:10px; font-weight:700; letter-spacing:.12em; }
+        .tools { display:flex; align-items:center; gap:8px; }
+        .clock,.tool-button { padding:8px 11px; border:1px solid var(--line); border-radius:99px; background:var(--panel); color:var(--ink); }
+        button { cursor:pointer; font:700 13px Arial,sans-serif; }
+        .tool-button:hover,.popular button:hover { border-color:var(--cyan); }
+        .aim { margin:12px 0 16px; padding:11px 14px; border:1px solid #345083; border-radius:11px; background:#1b2b55; color:#cad5f5; }
+        :root[data-theme="light"] .aim { background:#e6efff; color:#314264; }
+        .search-row { display:grid; grid-template-columns:1fr auto auto; gap:9px; }
+        .search-row input { min-width:0; padding:13px 15px; border:1px solid var(--line); border-radius:12px; background:var(--panel); color:var(--ink); font:inherit; }
+        .search-row input:focus { outline:3px solid #3479ff44; border-color:var(--blue); }
+        .primary { padding:12px 17px; border:0; border-radius:11px; background:linear-gradient(135deg,#3185ff,#465aff); color:white; }
+        .popular { display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin:10px 0 13px; color:var(--muted); font-size:12px; }
+        .popular button,.history button { padding:5px 10px; border:1px solid var(--line); border-radius:99px; background:var(--panel); color:var(--muted); }
+        .weather-card { padding:20px; border:1px solid var(--line); border-radius:18px; background:linear-gradient(135deg,var(--panel),var(--panel2)); box-shadow:0 20px 55px #02071555; }
+        .location-line { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+        .location-line h2 { margin:0; font-size:26px; }
+        .country { display:inline-block; margin-left:6px; padding:3px 8px; border-radius:99px; background:#3479ff33; color:#9cbfff; font-size:12px; vertical-align:middle; }
+        .updated { color:var(--muted); font-size:12px; text-align:right; }
+        .weather-main { display:grid; grid-template-columns:1fr auto; align-items:center; gap:18px; padding:20px 0; }
+        .condition { display:flex; align-items:center; gap:16px; }
+        .weather-icon { display:grid; place-items:center; width:68px; height:68px; border:1px solid var(--line); border-radius:18px; background:#ffffff0c; font-size:35px; }
+        .condition strong { display:block; font-size:22px; }
+        .condition span { color:var(--muted); }
+        .temperature { font-size:clamp(48px,9vw,76px); font-weight:700; letter-spacing:-.06em; line-height:1; }
+        .temperature small { color:var(--blue); font-size:.48em; vertical-align:top; }
+        .highlow { margin-top:7px; color:var(--muted); text-align:right; font-size:12px; }
+        .metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; }
+        .metric { min-height:76px; padding:12px; border:1px solid var(--line); border-radius:13px; background:#ffffff0a; }
+        .metric-label { color:var(--muted); font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+        .metric-value { display:block; margin-top:5px; font-size:16px; font-weight:700; }
+        .footer-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+        .subpanel { padding:14px; border:1px solid var(--line); border-radius:13px; background:#ffffff08; }
+        .subpanel-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px; font-weight:700; }
+        .subpanel-head button { padding:4px 7px; border:0; background:transparent; color:var(--red); }
+        .history { display:flex; flex-wrap:wrap; gap:7px; }
+        .empty { color:var(--muted); font-size:12px; }
+        .status { min-height:20px; margin:11px 0 0; color:var(--muted); font-size:12px; }
+        .status.error { color:var(--red); }
+        .session { margin:12px 0 0; color:var(--muted); text-align:center; font-size:11px; }
+        @media(max-width:640px) { body{padding:20px 12px}.topbar{align-items:flex-start}.clock{display:none}.search-row{grid-template-columns:1fr 1fr}.search-row input{grid-column:1/-1}.primary{width:100%}.weather-card{padding:15px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-grid{grid-template-columns:1fr}.temperature{font-size:54px}.condition strong{font-size:18px} }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<main>
+    <header class="topbar">
+        <div class="brand"><div class="logo" aria-hidden="true">🌦️</div><div><h1>WeatherScope</h1><div class="tag">JS LAB PRACTICAL 12</div></div></div>
+        <div class="tools"><span class="clock" id="clock">--:--:--</span><button class="tool-button" id="unitButton" type="button" aria-label="Change temperature unit">°C / °F</button><button class="tool-button" id="themeButton" type="button" aria-label="Change theme">☼</button></div>
+    </header>
+    <div class="aim">🎓 AIM: Build an interactive real-time web app using JavaScript and jQuery with DOM, events, storage, and AJAX integration.</div>
+
+    <form id="searchForm" class="search-row">
+        <input id="cityInput" type="search" placeholder="Search for a city (e.g., London, Tokyo, Mumbai, New York)…" aria-label="City to search" required>
+        <button class="primary" type="submit">⌕ Search</button>
+        <button class="tool-button" id="refreshButton" type="button">↻ Refresh</button>
+    </form>
+    <div class="popular"><strong>⚡ Popular:</strong><button type="button" data-city="London">London</button><button type="button" data-city="New York">New York</button><button type="button" data-city="Tokyo">Tokyo</button><button type="button" data-city="Paris">Paris</button><button type="button" data-city="Mumbai">Mumbai</button><button type="button" data-city="Sydney">Sydney</button></div>
+
+    <section class="weather-card" aria-live="polite">
+        <div class="location-line"><h2><span id="cityName">Weather</span><span class="country" id="countryCode"></span></h2><div class="updated">Last updated <span id="updatedAt">—</span><br><span id="timezone"></span></div></div>
+        <div class="weather-main">
+            <div class="condition"><div class="weather-icon" id="weatherIcon">🌤️</div><div><strong id="conditionName">Search a city</strong><span id="conditionDetail">Live conditions appear here.</span></div></div>
+            <div><div class="temperature"><span id="temperature">--</span><small id="temperatureUnit">°C</small></div><div class="highlow"><span id="highLow">H: --° · L: --°</span></div></div>
+        </div>
+        <div class="metrics">
+            <div class="metric"><span class="metric-label">🌡️ Feels like</span><span class="metric-value" id="feelsLike">--</span></div>
+            <div class="metric"><span class="metric-label">💧 Humidity</span><span class="metric-value" id="humidity">--</span></div>
+            <div class="metric"><span class="metric-label">🌬️ Wind speed</span><span class="metric-value" id="windSpeed">--</span></div>
+            <div class="metric"><span class="metric-label">🧭 Pressure</span><span class="metric-value" id="pressure">--</span></div>
+            <div class="metric"><span class="metric-label">📍 Coordinates</span><span class="metric-value" id="coordinates">--</span></div>
+            <div class="metric"><span class="metric-label">🌙 Daylight</span><span class="metric-value" id="daylight">--</span></div>
+        </div>
+        <div class="footer-grid">
+            <section class="subpanel"><div class="subpanel-head">◴ Recent Searches <span id="historyCount">0</span><button id="clearHistory" type="button">Clear history</button></div><div class="history" id="history"><span class="empty">Your recent cities will appear here.</span></div></section>
+            <section class="subpanel"><div class="subpanel-head">About this data</div><div class="empty">Weather data is requested asynchronously from Open-Meteo. Theme, temperature unit, recent searches, and this session’s last city are stored in your browser.</div></section>
+        </div>
+        <p class="status" id="status" role="status"></p>
+    </section>
+    <p class="session" id="sessionInfo">This tab session has not searched for a city yet.</p>
+</main>
+<script src="./app.js"></script>
+</body>
+</html>
