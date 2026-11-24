@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiment 6 | String &amp; Regex Analyzer</title>
+    <style>
+        :root { color-scheme: light; --ink:#17233d; --muted:#68758e; --line:#e1e7f2; --purple:#6253d8; --soft:#f4f5fc; }
+        * { box-sizing:border-box; }
+        body { margin:0; padding:40px 18px; background:#f4f6fb; color:var(--ink); font:15px/1.5 Arial,sans-serif; }
+        main { width:min(760px,100%); margin:auto; }
+        .eyebrow { color:var(--purple); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+        h1 { margin:6px 0 4px; font-size:clamp(26px,5vw,38px); }
+        .intro { margin:0 0 24px; color:var(--muted); }
+        .card { padding:24px; border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 14px 36px #27365b12; }
+        label { display:block; margin:14px 0 6px; font-weight:700; }
+        textarea,input { width:100%; padding:12px 13px; border:1px solid var(--line); border-radius:10px; color:var(--ink); font:inherit; }
+        textarea { min-height:100px; resize:vertical; }
+        input:focus,textarea:focus { outline:3px solid #6253d822; border-color:var(--purple); }
+        .row { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:end; }
+        button { border:0; border-radius:10px; padding:12px 18px; background:var(--purple); color:white; font:700 15px Arial,sans-serif; cursor:pointer; }
+        button:hover { background:#5041c3; }
+        .results { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:22px; }
+        .result { padding:14px; border-radius:12px; background:var(--soft); min-width:0; }
+        .result strong { display:block; margin-bottom:5px; font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+        .result span { overflow-wrap:anywhere; }
+        .status { margin-top:14px; color:#08704b; font-weight:700; }
+        @media(max-width:560px) { body{padding:24px 12px}.card{padding:18px}.row,.results{grid-template-columns:1fr}button{width:100%} }
+    </style>
+</head>
+<body>
+<main>
+    <div class="eyebrow">Experiment 06 · JavaScript Strings</div>
+    <h1>String &amp; Regex Analyzer</h1>
+    <p class="intro">Trim and inspect text, validate an email address, and extract numbers with regular expressions.</p>
+    <section class="card" aria-label="String analysis form">
+        <label for="textInput">Text to analyze</label>
+        <textarea id="textInput">JavaScript has 8 string methods and 2 regex examples.</textarea>
+        <div class="row">
+            <div><label for="emailInput">Email address</label><input id="emailInput" type="email" value="parth.pusadkar@example.com" autocomplete="email"></div>
+            <button id="analyzeButton" type="button">Analyze text</button>
+        </div>
+        <div class="results" aria-live="polite">
+            <div class="result"><strong>Trimmed text</strong><span id="trimmedOutput">—</span></div>
+            <div class="result"><strong>Email validation</strong><span id="emailOutput">—</span></div>
+            <div class="result"><strong>Uppercase</strong><span id="uppercaseOutput">—</span></div>
+            <div class="result"><strong>Numbers found</strong><span id="numbersOutput">—</span></div>
+            <div class="result"><strong>Word count</strong><span id="wordCountOutput">—</span></div>
+            <div class="result"><strong>Contains “JavaScript”</strong><span id="containsOutput">—</span></div>
+        </div>
+        <p class="status" id="status" role="status">Ready to analyze.</p>
+    </section>
+</main>
+<script>
+    const byId = (id) => document.getElementById(id);
+
+    function analyzeText() {
+        const text = byId("textInput").value.trim();
+        const email = byId("emailInput").value.trim();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const numbers = text.match(/\d+(?:\.\d+)?/g) || [];
+        const words = text.match(/[\p{L}\p{N}']+/gu) || [];
+
+        byId("trimmedOutput").textContent = text || "No text entered";
+        byId("emailOutput").textContent = emailPattern.test(email) ? "Valid" : "Invalid";
+        byId("uppercaseOutput").textContent = text.toUpperCase() || "—";
+        byId("numbersOutput").textContent = numbers.length ? numbers.join(", ") : "None";
+        byId("wordCountOutput").textContent = String(words.length);
+        byId("containsOutput").textContent = text.toLowerCase().includes("javascript") ? "Yes" : "No";
+        byId("status").textContent = "Text analysis completed successfully.";
+    }
+
+    byId("analyzeButton").addEventListener("click", analyzeText);
+    analyzeText();
+</script>
+</body>
+</html>
