@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experiment 10 | JSON Data Table</title>
+    <style>
+        :root { --ink:#17233d; --muted:#68758e; --line:#e1e7f2; --purple:#6253d8; }
+        * { box-sizing:border-box; }
+        body { margin:0; padding:40px 18px; background:#f4f6fb; color:var(--ink); font:15px/1.5 Arial,sans-serif; }
+        main { width:min(820px,100%); margin:auto; }
+        .eyebrow { color:var(--purple); font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+        h1 { margin:6px 0 4px; font-size:clamp(26px,5vw,38px); }
+        .intro { margin:0 0 24px; color:var(--muted); }
+        .card { padding:24px; border:1px solid var(--line); border-radius:18px; background:#fff; box-shadow:0 14px 36px #27365b12; }
+        .student { padding:11px 14px; border-radius:10px; background:#efedff; color:#3e328f; font-weight:700; }
+        .grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:14px; margin-top:14px; }
+        .panel { padding:18px; border:1px solid var(--line); border-radius:12px; }
+        h2 { margin:0 0 12px; font-size:16px; }
+        .status { margin:8px 0; padding:10px; border-radius:9px; background:#f4f6fb; color:var(--muted); font-size:13px; }
+        .status.done { background:#eaf8f1; color:#08704b; }
+        .status.error { background:#fff0ef; color:#b42318; }
+        table { width:100%; border-collapse:collapse; font-size:14px; }
+        th,td { padding:10px 8px; border-bottom:1px solid var(--line); text-align:left; }
+        th { background:#f4f5fc; color:#38455e; }
+        caption { margin-bottom:8px; text-align:left; color:var(--muted); }
+        @media(max-width:640px) { body{padding:24px 12px}.card{padding:18px}.grid{grid-template-columns:1fr}.panel{padding:14px}th,td{padding:8px 5px;font-size:12px} }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<main>
+    <div class="eyebrow">Experiment 10 · Asynchronous Data</div>
+    <h1>JSON Data Table</h1>
+    <p class="intro">Load a local JSON file with both the Fetch API and jQuery <code>$.getJSON()</code>.</p>
+    <section class="card">
+        <div class="student">Parth Pusadkar · PRN: 24070521106</div>
+        <div class="grid">
+            <section class="panel">
+                <h2>Program Output</h2>
+                <p class="status" id="fetchStatus" role="status">Fetch API: loading…</p>
+                <p class="status" id="jqueryStatus" role="status">jQuery: loading…</p>
+            </section>
+            <section class="panel">
+                <h2>Practical Demonstration</h2>
+                <table>
+                    <caption>Student records loaded from students.json</caption>
+                    <thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Score</th></tr></thead>
+                    <tbody id="studentRows"><tr><td colspan="4">Loading records…</td></tr></tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</main>
+<script>
+    const rows = document.getElementById("studentRows");
+    let records = [];
+
+    function showRecords(students) {
+        records = students;
+        rows.replaceChildren();
+        students.forEach((student) => {
+            const row = document.createElement("tr");
+            [student.id, student.name, student.course, student.score].forEach((value) => {
+                const cell = document.createElement("td");
+                cell.textContent = String(value);
+                row.append(cell);
+            });
+            rows.append(row);
+        });
+    }
+
+    function setStatus(id, message, state) {
+        const element = document.getElementById(id);
+        element.textContent = message;
+        element.className = `status ${state}`;
+    }
+
+    fetch("students.json")
+        .then((response) => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+        })
+        .then((students) => {
+            showRecords(students);
+            setStatus("fetchStatus", `${students.length} JSON records loaded using fetch().`, "done");
+        })
+        .catch(() => setStatus("fetchStatus", "Fetch failed. Start a local web server and reload.", "error"));
+
+    if (window.jQuery) {
+        $.getJSON("students.json")
+            .done((students) => {
+                showRecords(students);
+                setStatus("jqueryStatus", `${students.length} JSON records loaded using $.getJSON().`, "done");
+            })
+            .fail(() => setStatus("jqueryStatus", "jQuery request failed. Check the local server and internet connection.", "error"));
+    } else {
+        setStatus("jqueryStatus", "jQuery did not load. Check your internet connection and reload.", "error");
+    }
+</script>
+</body>
+</html>
