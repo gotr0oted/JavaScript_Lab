@@ -37,18 +37,19 @@ Each experiment folder contains its source code and a related screenshot.
 | 08 | Form events and live gym admission validation | [Exp8](Exp8/code.html) | [View](Exp8/Screenshot.png) |
 | 09 | Theme preferences with localStorage and sessionStorage | [Exp9](Exp9/code.html) | [View](Exp9/Screenshot.png) |
 | 10 | JSON table loaded with `fetch()` and jQuery `$.getJSON()` | [Exp10](Exp10/code.html) · [Data](Exp10/students.json) | [View](Exp10/Screenshot.png) |
+| 11 | Real-time class scheduler with timers and ES6 modules | [Exp11](Exp11/code.html) · [App module](Exp11/app.js) | [View](Exp11/Screenshot.png) |
+| 12 | Weather dashboard with jQuery, AJAX, DOM events, and storage | [Exp12](Exp12/code.html) · [App code](Exp12/app.js) | [View](Exp12/Screenshot.png) |
 
 ## ▶️ Run an Experiment
 
 1. Open the experiment folder.
-2. Open `code.html` in a modern browser.
-3. For Experiment 10, start a local web server in the repository folder so the browser can fetch `students.json`:
+2. Experiments 1–9 can be opened directly with a modern browser. Experiments 10–12 use local data, ES modules, or AJAX and should be served over HTTP. Start a local web server in the repository folder:
 
 ```bash
 python -m http.server 8000
 ```
 
-Then visit `http://localhost:8000/Exp10/code.html` in your browser. Experiment 10 loads jQuery from its official CDN, so an internet connection is needed for the `$.getJSON()` demonstration.
+Then open the relevant experiment page, such as `http://localhost:8000/Exp11/code.html` or `http://localhost:8000/Exp12/code.html`. Experiment 10 uses jQuery from its official CDN. Experiment 12 uses jQuery and the Open-Meteo geocoding and weather APIs. An internet connection is required for these demonstrations.
 
 ## 🧠 Topics Covered
 
@@ -56,7 +57,7 @@ Then visit `http://localhost:8000/Exp10/code.html` in your browser. Experiment 1
 - Arrays, objects, and string processing
 - Regular expressions and client-side validation
 - DOM traversal, updates, and event handling
-- localStorage, sessionStorage, Fetch API, and jQuery JSON requests
+- localStorage, sessionStorage, Fetch API, jQuery AJAX, and ES6 modules
 
 ---
 
